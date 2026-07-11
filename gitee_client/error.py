@@ -40,7 +40,7 @@ class GiteeAPIError(GiteeError):
     def __str__(self) -> str:
         parts = [f"{self.status_code}"]
         if self.error_message:
-            parts.append(self.error_message)
+            parts.append(str(self.error_message))
         return " ".join(parts)
 
     @classmethod
@@ -52,7 +52,17 @@ class GiteeAPIError(GiteeError):
         try:
             body = response.json()
             if isinstance(body, dict):
-                error_message = body.get("error_description") or body.get("message") or body.get("error") or ""
+                raw = body.get("error_description") or body.get("message") or body.get("error") or ""
+                # Gitee may return error as a nested dict like {"base": ["msg"]}
+                if isinstance(raw, dict):
+                    # Flatten the first list value from the first key
+                    try:
+                        first_val = next(iter(raw.values()))
+                        error_message = first_val[0] if isinstance(first_val, list) and first_val else str(first_val)
+                    except (StopIteration, IndexError):
+                        error_message = str(raw)
+                else:
+                    error_message = str(raw)
             elif isinstance(body, str):
                 error_message = body
         except (json.JSONDecodeError, ValueError):

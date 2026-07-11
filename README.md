@@ -431,6 +431,25 @@ def process_repo(repo: Project) -> None:
 - Python >= 3.8
 - requests
 
+## 更新日志
+
+### v1.1.1 (2026-07-11)
+
+- 新增 `set_repo_visibility` 方法，快速设置仓库公私有状态
+- 修复 `GiteeAPIError` 无法正确解析 Gitee 返回的嵌套 dict 错误信息（如 `{"error": {"base": ["msg"]}}`）的问题
+
+### v1.1.0
+
+- 新增 `download_archive` / `download_file` 下载方法
+
+### v1.0.1
+
+- 修复 PyPI 发布流程
+
+### v1.0.0
+
+- 首个正式版本，覆盖 175 个端点、16 个资源分组
+
 ## 许可
 
 MIT
