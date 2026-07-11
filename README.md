@@ -14,10 +14,18 @@
 ## 安装
 
 ```bash
-pip install requests  # 唯一依赖
+pip install gitee-client
 ```
 
-将 `gitee_client/` 目录复制到你的项目中即可使用。
+也可以从源码安装：
+
+```bash
+# 从 Gitee
+pip install git+https://gitee.com/TableRogue/gitee_client.git
+
+# 从 GitHub
+pip install git+https://github.com/TableRogue0805/gitee_client.git
+```
 
 ## 快速开始
 
