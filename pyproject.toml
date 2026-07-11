@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "gitee-client"
-version = "1.1.1"
+version = "1.1.2"
 description = "Gitee API v5 Python 客户端库 — 覆盖全部 264 个端点"
 readme = "README.md"
 license = { text = "MIT" }

@@ -433,10 +433,13 @@ def process_repo(repo: Project) -> None:
 
 ## 更新日志
 
-### v1.1.1 (2026-07-11)
+### v1.1.2 (2026-07-11)
+
+- 修复 `GiteeAPIError` 无法正确解析 Gitee 返回的嵌套 dict 错误信息（如 `{"error": {"base": ["msg"]}}`）的问题
+
+### v1.1.1
 
 - 新增 `set_repo_visibility` 方法，快速设置仓库公私有状态
-- 修复 `GiteeAPIError` 无法正确解析 Gitee 返回的嵌套 dict 错误信息（如 `{"error": {"base": ["msg"]}}`）的问题
 
 ### v1.1.0
 
