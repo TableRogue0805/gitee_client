@@ -76,6 +76,10 @@ client.repos.update_repos(
 # 删除仓库
 client.repos.delete_repos(owner="username", repo="repo-name")
 
+# 快速设置仓库公私有状态
+client.repos.set_repo_visibility("owner", "repo", private=True)   # 设为私有
+client.repos.set_repo_visibility("owner", "repo", private=False)  # 设为公开
+
 # 列出某个用户的公开仓库
 repos = client.repos.list_users_repos(username="someone")
 ```

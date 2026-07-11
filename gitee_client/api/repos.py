@@ -1460,6 +1460,36 @@ class ReposAPI(BaseAPI):
             },
         )
 
+    def set_repo_visibility(self, owner: str, repo: str, private: bool) -> Any:
+        """快速设置仓库公私有状态。
+
+        这是一个便捷方法，自动获取仓库当前名称后仅更新 ``private`` 字段，
+        无需手动传入 ``name`` 等其它参数。
+
+        Args:
+            owner: 仓库所属空间地址(企业、组织或个人的地址path)。
+            repo: 仓库路径(path)。
+            private: ``True`` 设为私有，``False`` 设为公开。
+
+        Returns:
+            更新后的仓库信息（dict）。
+
+        Usage::
+
+            # 设为私有
+            client.repos.set_repo_visibility("owner", "repo", True)
+
+            # 设为公开
+            client.repos.set_repo_visibility("owner", "repo", False)
+        """
+        current = self.get_repos(owner, repo)
+        return self.update_repos(
+            owner=owner,
+            repo=repo,
+            name=current["name"],
+            private=private,
+        )
+
     def update_repos_branches_protection(self, branch: str, owner: str, repo: str) -> Any:
         """设置分支保护
 
