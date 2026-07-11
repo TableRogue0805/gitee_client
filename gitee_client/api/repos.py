@@ -2005,3 +2005,81 @@ class ReposAPI(BaseAPI):
             **params,
         )
 
+    # ── download helpers ──────────────────────────────────────────
+
+    def download_archive(
+        self,
+        owner: str,
+        repo: str,
+        format: str = "tarball",
+        ref: Optional[str] = None,
+        output: Optional[str] = None,
+    ):
+        """下载仓库压缩包。
+
+        Args:
+            owner: 仓库所属空间地址(企业、组织或个人的地址path)。
+            repo: 仓库路径(path)。
+            format: 压缩格式，``"tarball"`` (tar.gz) 或 ``"zip"``。
+            ref: 分支、tag或commit。默认: 仓库的默认分支。
+            output: 保存到本地文件路径。不传则返回 bytes 内容。
+
+        Returns:
+            若指定 ``output`` 则写入文件返回 ``None``，否则返回 ``bytes``。
+
+        Usage::
+
+            # 下载并保存到文件
+            client.repos.download_archive("owner", "repo", output="repo.tar.gz")
+
+            # 获取 bytes 内容
+            data = client.repos.download_archive("owner", "repo", format="zip")
+        """
+        if format not in ("tarball", "zip"):
+            raise ValueError(f"format 必须为 'tarball' 或 'zip'，收到: {format!r}")
+        # Gitee API 端点名称: tarball → /tarball, zip → /zipball
+        endpoint = "zipball" if format == "zip" else format
+        url = build_url("", "/v5/repos/{owner}/{repo}/" + endpoint, owner=owner, repo=repo)
+        resp = self._get(url, params={"ref": ref}, raw_response=True)
+        if output:
+            with open(output, "wb") as f:
+                f.write(resp.content)
+            return None
+        return resp.content
+
+    def download_file(
+        self,
+        owner: str,
+        repo: str,
+        path: str,
+        ref: Optional[str] = None,
+        output: Optional[str] = None,
+    ):
+        """下载仓库中的单个原始文件。
+
+        Args:
+            owner: 仓库所属空间地址(企业、组织或个人的地址path)。
+            repo: 仓库路径(path)。
+            path: 文件在仓库中的路径，如 ``"README.md"`` 或 ``"src/main.py"``。
+            ref: 分支、tag或commit。默认: 仓库的默认分支。
+            output: 保存到本地文件路径。不传则返回文本内容。
+
+        Returns:
+            若指定 ``output`` 则写入文件返回 ``None``，否则返回 ``str``。
+
+        Usage::
+
+            # 获取文件内容
+            content = client.repos.download_file("owner", "repo", "README.md")
+
+            # 下载并保存到本地
+            client.repos.download_file("owner", "repo", "src/main.py", output="main.py")
+        """
+        url = build_url("", "/v5/repos/{owner}/{repo}/raw/{path}", owner=owner, path=path, repo=repo)
+        resp = self._get(url, params={"ref": ref}, raw_response=True)
+        if output:
+            with open(output, "wb") as f:
+                f.write(resp.content)
+            return None
+        return resp.text
+

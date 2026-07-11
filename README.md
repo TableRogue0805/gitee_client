@@ -80,6 +80,26 @@ client.repos.delete_repos(owner="username", repo="repo-name")
 repos = client.repos.list_users_repos(username="someone")
 ```
 
+### 下载仓库 / 文件
+
+```python
+# 下载整个仓库（tar.gz / zip）
+client.repos.download_archive("owner", "repo", format="tarball", output="repo.tar.gz")
+client.repos.download_archive("owner", "repo", format="zip", output="repo.zip")
+
+# 不指定 output 则返回内容（bytes）
+data = client.repos.download_archive("owner", "repo", format="zip")
+
+# 指定分支/标签/commit
+data = client.repos.download_archive("owner", "repo", ref="main")
+
+# 下载单个文件内容（返回文本）
+content = client.repos.download_file("owner", "repo", "README.md")
+
+# 下载文件并保存到本地
+client.repos.download_file("owner", "repo", "README.md", ref="main", output="README.md")
+```
+
 ### Issue 操作
 
 ```python
